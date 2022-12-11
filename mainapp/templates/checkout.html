@@ -13,9 +13,35 @@
             </div>
         </div>
         <div class="checkout__form">
-            <h4>Billing Details</h4>
+            <h4>Delivery Address</h4>
             <form action="#">
                 <div class="row">
+                    {% if request.user %}
+                    <div class="col-lg-8 col-md-6">
+                        <div class="checkout__input">
+                            <label class="fw-bold"><strong>{{ address_form.full_name.label}}:</strong></label>
+                            {{ address.full_name}}
+                        </div>
+                        <div class="checkout__input">
+                            <label class="fw-bold"><strong>{{ address_form.phone_number.label}}:</strong></label>
+                            {{ address.phone_number }}
+                        </div>
+                        <div class="checkout__input">
+                            <label class="fw-bold"> <strong>{{ address_form.area.label}}:</strong></label>
+                            {{ address.area }}
+                        </div>
+                        <div class="checkout__input">
+                            <label class="fw-bold"> <strong>{{ address_form.district.label}}:</strong></label>
+                            {{ address.district}}
+                        </div>
+                        <div class="checkout__input">
+                            <label class="fw-bold"> <strong>{{ address_form.physical_address.label}}:</strong></label>
+                            {{ address.physical_address}}
+                        </div>
+                        
+                    </div>
+
+                    {% else %}
                     <div class="col-lg-8 col-md-6">
                         <div class="checkout__input">
                             <label class="fw-bold">{{ address_form.full_name.label}}</label>
@@ -70,6 +96,7 @@
                                 placeholder="Notes about your order, e.g. special notes for delivery.">
                         </div>
                     </div>
+                    {% endif %}
                     <div class="col-lg-4 col-md-6">
                         <div class="checkout__order">
                             <h4>Your Order</h4>
@@ -79,32 +106,13 @@
                                 <li>{{item.item}} <span>{{item.total_price}}</span></li>
                                 {% endfor %}
                             </ul>
-                            <div class="checkout__order__subtotal">Delivery price <span>{{basket.get_delivery_price}}</span></div>
-                            
+                            {% if basket.get_delivery_price > 0.00 %}
+                            <div class="checkout__order__subtotal">Delivery price <span>MWK 0.00</span></div>
                             <div class="checkout__order__total">Total <span>{{basket.get_subtotal_price}}</span></div>
-                            <div class="checkout__input__checkbox">
-                                <label for="acc-or">
-                                    Create an account?
-                                    <input type="checkbox" id="acc-or">
-                                    <span class="checkmark"></span>
-                                </label>
-                            </div>
-                            <p>Lorem ipsum dolor sit amet, consectetur adip elit, sed do eiusmod tempor incididunt
-                                ut labore et dolore magna aliqua.</p>
-                            <div class="checkout__input__checkbox">
-                                <label for="payment">
-                                    Check Payment
-                                    <input type="checkbox" id="payment">
-                                    <span class="checkmark"></span>
-                                </label>
-                            </div>
-                            <div class="checkout__input__checkbox">
-                                <label for="paypal">
-                                    Paypal
-                                    <input type="checkbox" id="paypal">
-                                    <span class="checkmark"></span>
-                                </label>
-                            </div>
+                            {% else %}
+                            <div class="checkout__order__subtotal">Delivery price <span>{{basket.get_delivery_price}}</span></div>
+                            <div class="checkout__order__total">Total <span>{{total_price}}</span></div>
+                            {% endif %}                     
                             <button type="submit" class="site-btn">PLACE ORDER</button>
                         </div>
                     </div>

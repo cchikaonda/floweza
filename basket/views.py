@@ -17,8 +17,6 @@ def basket_add(request, item_id):
     item = get_object_or_404(Item, id = item_id)
     if request.method == "POST":
         qty = int(request.POST.get('qty'))
-        print(item)
-        print(qty)
         basket.add(item = item, qty = qty, override_qty='override')
     return redirect ('shopping_cart')
 
@@ -47,8 +45,7 @@ def basket_update_delivery(request):
         else:
             session["purchase"]["delivery_id"] = delivery_type.id
             session.modified = True
-
-
+            
         response = JsonResponse({"total": str(updated_total_price), "delivery_price": str(delivery_type.delivery_price)})
         return response
 

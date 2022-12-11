@@ -101,7 +101,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-1 ps-md-1 ">
-                                    <input class="align-middle h-100" type="radio" name="deliveryOption" id="{{option.id}}"
+                                    <input class="align-middle h-100 deliveryC" type="radio" name="deliveryOption" id="{{option.id}}"
                                     value="{{option.id}}">
                                 </div>
                             </div>
@@ -117,7 +117,7 @@
                     <ul>
                         <li>Subtotal <span>{{basket.get_subtotal_price}}</span></li>
                         {% if basket.get_delivery_price > 0.00 %}
-                        <li>Delivery Cost <span id="delivery_price">{{basket.get_delivery_price}}</span></li>
+                        <li>Delivery Cost <span id="delivery_price">{{delivery_cost}}</span></li>
                         <li>Total <span id="total" class="text-success">{{basket.get_total_price}}</span></li>
                         {% else %}
                         <li>Delivery Cost <span id="delivery_price">MWK 0.00</span></li>
@@ -136,4 +136,7 @@
     </div>
 </section>
 <!-- Shoping Cart Section End -->
+
+
+
 {% endblock body %}

@@ -60,23 +60,34 @@ def shop(request):
 def shopping_cart(request):
     basket = Basket(request)
     deliveryoptions = DeliveryOptions.objects.all()
+    delivery_cost = str(basket.get_delivery_price())
     context = {
         'title':'Floweza MIS',
         'header':'Shopping Cart',
         'basket':basket,
         'deliveryoptions':deliveryoptions,
+        'delivery_cost':delivery_cost,
     }
     return render(request, 'shopping_cart.html', context)
 
 def checkout(request):
     basket = Basket(request)
     address_form = UserAddressForm()
-    
+    total_price = str(basket.get_total_price())
+    print(request.user)
+    addresses = ''
+    address = ''
+    if request.user.is_authenticated:
+        address = Address.objects.get(customer=request.user, default = True)
+        addresses = Address.objects.filter(customer=request.user, default = False)
     context = {
         'title':'Floweza MIS',
         'header': 'Checkout',
         'basket':basket,
+        'address':address,
+        'addresses':addresses,
         'address_form':address_form,
+        'total_price':total_price,
         
     }
     return render(request, 'checkout.html', context)
