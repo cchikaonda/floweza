@@ -1,0 +1,49 @@
+
+{% extends 'base_mainapp.html' %}
+{% load static %}
+
+{% block body %}
+    <main class="pt-5">
+        <div class="container">
+            <div class="login d-flex align-items-center">
+            <div class="col-12 col-md-12 col-lg-12 mx-auto">
+                <div class="col-6 mx-auto">
+                <h1 class="h3">Create/Edit Address</h1>
+                <div>Add a new delivery <b>address</b> and delivery preferences</div>
+                <hr />
+                <form name="address_form" class="account-form" method="post" enctype="multipart/form-data">
+                    {% if form.errors %}
+                    <div class="alert alert-primary" role="alert">
+                    Error: Please try again!
+                    </div>
+                    {% endif %}
+                    {% csrf_token %}
+                    <label class="small fw-bold">{{ form.full_name.label}}</label>
+                    {{ form.full_name }}
+                    <label class="small fw-bold">{{ form.phone_number.label}}</label>
+                    {{ form.phone_number }}
+                    <label class="small fw-bold">{{ form.area.label}}</label>
+                    {{ form.area }}
+                    <label class="small fw-bold">{{ form.district.label}}</label>
+                    {{ form.district }}
+                    <label class="small fw-bold">{{ form.physical_address.label}}</label>
+                    {{ form.physical_address }}
+                    <button class="btn site-btn btn-block py-2 mb-4 mt-4 fw-bold w-100" type="button" value="Submit" onclick="submitForm()">
+                    Add Address
+                    </button>
+                </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script> 
+function submitForm() {
+   var form = document.getElementsByName('address_form')[0];
+   form.submit(); // Submit the form
+   form.reset();  // Reset all form data
+   return false; // Prevent page refresh
+}
+</script>
+{% endblock body %}

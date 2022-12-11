@@ -1,0 +1,40 @@
+{% extends 'base_inventory.html' %}
+{% block content %}
+<div id="page-container">
+  <div class="content">
+        <!-- Full Table -->
+        <div class="block card-body">
+            <div class="block-content">
+              <div class="block-header">
+                <!--  <button class="btn btn-success "type="button" name="button" data-target = "#add_new_supplier_modal" data-toggle="modal">Add New User</button> -->
+              <button class="btn btn-primary show-form mt-2 mb-2" data-url="{% url 'customer_create' %}"> <span class="fa fa-plus fa-1x"></span> New Customer</button>
+              </div>
+            <div class="block-content block-content-full">
+                <!-- DataTables init on table by adding .js-dataTable-buttons class, functionality is initialized in js/pages/be_tables_datatables.min.js which was auto compiled from _es6/pages/be_tables_datatables.js -->
+                <table class="table table-bordered table-striped" id="customer-table">
+                  <thead >
+                    <tr>
+                      <th>ID</th>
+                      <th>Customer Name</th>
+                      <th>Address</th>
+                      <th >Phone#</th>
+                      <th>Total Invoices</th>
+                      <th >Actions</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                    {% include "customers/customer_list_2.html" %}
+                  </tbody>
+              </table>
+        </div>
+            </div>
+        </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modal-customer">
+  <div class="modal-dialog">
+    <div class="modal-content"></div>
+  </div>
+</div>
+{% endblock %}

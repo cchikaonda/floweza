@@ -1,0 +1,37 @@
+{% load crispy_forms_tags %}
+<script>
+	var input = document.querySelector("#phone_number");
+		window.intlTelInput(input, {
+		// any initialisation options go here
+		
+		initialCountry: "auto",
+			geoIpLookup: function(callback) {
+				$.get('https://ipinfo.io', function() {}, "jsonp").always(function(resp) {
+				var countryCode = (resp && resp.country) ? resp.country : "mw";
+				callback(countryCode);
+				});
+		},
+		separateDialCode: true,
+			customPlaceholder: function (
+				selectedCountryPlaceholder,
+				selectedCountryData
+			) {
+				return "e.g. " + selectedCountryPlaceholder;
+			},
+
+		});
+</script>
+<form method="post" data-url="{% url 'customer_update' form.instance.id %}" class="update-form " >
+	{% csrf_token %}
+	<div class="modal-header bg-warning">
+        <h4 class="modal-title ">UPDATE CUSTOMER DETAILS</h4>
+    </div>
+	</div>
+		<div class="modal-body">
+		{{form|crispy}}
+		</div>
+		<div class="modal-footer block-content block-content-full text-right border-top">
+		<button type="button" class="btn btn-sm btn-outline-primary" data-dismiss="modal">Cancel Changes</button>
+		<button type="submit" class="btn btn-sm btn-outline-danger"><i class="fa fa-check mr-1"></i>Save Changes</button>
+		</div>
+</form>

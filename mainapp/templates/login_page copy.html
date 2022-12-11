@@ -1,0 +1,151 @@
+{% extends 'base_mainapp.html' %}
+{% load static %}
+
+
+{% block body %}
+
+<style>
+    .footer{
+      display:None !important;
+    }
+</style>
+
+<style>
+
+body{
+    
+    
+    font-family: "Lato", sans-serif;
+        }
+        a{
+         text-decoration:none !important;
+         }
+         h1,h2,h3{
+         font-family: 'Kaushan Script', cursive;
+         }
+          .myform{
+    position: relative;
+    display: -ms-flexbox;
+    display: flex;
+    padding: 1rem;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: 100%;
+    pointer-events: auto;
+    background-clip: padding-box;
+    border: 1px solid rgba(0,0,0,.2);
+    border-radius: 1.1rem;
+    outline: 0;
+    max-width: 1000px;
+     }
+         .tx-tfm{
+         text-transform:uppercase;
+         }
+         .mybtn{
+         border-radius:50px;
+         }
+        
+         .login-or {
+         position: relative;
+         color: rgb(6, 88, 54);
+         margin-top: 15px;
+         margin-bottom: 10px;
+         padding-top: 10px;
+         padding-bottom: 15px;
+         }
+         .span-or {
+         display: block;
+         position: absolute;
+         right: 35%;
+         top: -2px;
+         margin-left: -25px;
+         width: 100px;
+         text-align: center;
+         }
+         .hr-or {
+         height: 1px;
+         margin-top: 0px !important;
+         margin-bottom: 0px !important;
+         }
+         .login-form{
+            height: 100px !important;
+         }
+         #top-right-header, .top-menu-item1, #top-menu-item2{
+          visibility: hidden;
+         }
+</style>
+
+
+  
+<div class="col-md-4 mx-auto mb-4">
+  <div id="first">
+  <div class="myform form">
+      <div class="logo mb-3">
+        <div class="col-md-12 text-center">
+        <h3>Login</h3>
+        </div>
+    </div>
+
+    <form action="#" method="POST" name="login">
+      {% csrf_token %}
+        <div class="input-group mb-3">
+          <input type="email" class="form-control" placeholder="Email" name="username" >
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fa fa-envelope"></span>
+            </div>
+          </div>
+        </div>
+        <div class="input-group mb-3">
+          <input type="password" class="form-control" placeholder="Password" name="password">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fa fa-lock"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-4">
+          <a href="" class="text-danger">{{form.errors}}</a>
+          <!-- /.col -->
+          <div class="col-12">
+            <button type="submit" class="site-btn btn-block"><i class="fa fa-sign-in"></i> Log In</button>
+          </div>
+          <!-- /.col -->
+          <div class="col-12 mt-2">
+            <button type="submit" class="site-btn btn-block col-4"><i class="fa fa-sign-in"></i> Register</button>
+            <button type="submit" class="site-btn btn-block col-4"><i class="fa fa-sign-in"></i> Register</button>
+          </div>
+        </div>
+        
+
+          {% comment %} 
+          <div class="col-12 text-center">
+            <a href="#">Reset Password</a>
+          </div>  {% endcomment %}
+
+          {% comment %} Display Messages {% endcomment %}
+          {% if messages %}
+          <div class="col-12">
+            {% for message in messages %}
+              {% if message.tags == "error" %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                  {{ message }}
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+          {% endif %}
+
+          <!-- /.col -->
+        </div>
+      </form>
+  </div>
+</div>
+
+
+
+{% endblock body %}

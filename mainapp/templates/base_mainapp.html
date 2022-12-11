@@ -1,0 +1,106 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zxx">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Ogani Template">
+    <meta name="keywords" content="Ogani, unica, creative, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{{title}}</title>
+
+    {% include 'all_css_imports.html' %}
+   
+</head>
+
+<body>
+    <!-- Page Preloder -->
+    <div id="preloder">
+        <div class="loader"></div>
+    </div>
+
+    {% include 'includes/header.html' %}
+
+
+    {% block body %}
+
+
+    {% endblock body %}
+
+
+    {% include 'includes/footer.html' %}
+    <!--All Javascript Imports-->
+    {% include 'all_js_imports.html' %}
+    <!--End all Javascript imports-->
+
+    <!-- Logout Modal-->
+<div id="logout_confirm" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+    <div class="modal-header">
+    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">×</span>
+    </button>
+    </div>
+    <div class="modal-body text-center"><b><h3>Are you sure you want to logout ?</h3></b></div>
+    <div class="modal-footer">
+    <button class="btn btn-primary confirm_button" data-dismiss="modal" type="button">NO</button>
+    <a href="{% url 'logout_request' %}" ><button class="btn btn-danger confirm_button" type="button">YES</button></a>
+    </div>
+    </div>
+</div>
+</div>
+<!-- Logout Modal -->
+
+<script>
+    {% for msg in messages %}
+      {% if msg.tags == 'info' %}
+          Swal.fire(
+          '{{msg}}',
+          '',
+          'info'
+        );
+      {% elif msg.tags == 'error' %}
+          Swal.fire(
+              '{{msg}}',
+              '',
+              'error'
+            );
+      {% elif msg.tags == 'success' %}
+          Swal.fire(
+              '{{msg}}',
+              '',
+              'success'
+            );
+      {% endif %}
+
+    {% endfor %}
+  </script>
+
+<script>
+  $('input[type=radio][name=deliveryOption]').on('change', function(e) {
+    e.preventDefault();
+    $.ajax({
+      type: "POST",
+      url: '{% url "basket:basket_update_delivery" %}',
+      data: {
+        deliveryoption: $(this).val(),
+        csrfmiddlewaretoken: "{{csrf_token}}",
+        action: "post",
+      },
+      success: function (json) {
+        document.getElementById("total").innerHTML = json.total;
+        document.getElementById("delivery_price").innerHTML = json.delivery_price;
+      },
+      error: function (xhr, errmsg, err) {},
+    });
+  });
+</script>
+
+
+
+</body>
+
+</html>
