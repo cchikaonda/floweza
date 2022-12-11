@@ -38,6 +38,18 @@
                             <label class="fw-bold"> <strong>{{ address_form.physical_address.label}}:</strong></label>
                             {{ address.physical_address}}
                         </div>
+                        <h4>Payment Details</h4>
+                        <div class="row checkout__input">
+                            <div class="checkout__input col-6">
+                                <label class="fw-bold"> <strong>{{ payment_form.payment_mode.label}}</strong></label> <br/>
+                                {{ payment_form.payment_mode}}
+                            </div>
+                            <div class="checkout__input col-6">
+                                <label class="fw-bold"> <strong>{{ payment_form.paid_amount.label}}</strong></label> <br/>
+                                {{ payment_form.paid_amount}}
+                            </div>
+                        </div>
+                        
                         
                     </div>
 

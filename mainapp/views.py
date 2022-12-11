@@ -24,6 +24,7 @@ from inventory.models import ItemCategory, Item
 
 from django.http import HttpResponse
 from basket.basket import Basket
+from order.forms import *
 
 
 
@@ -71,10 +72,10 @@ def shopping_cart(request):
     return render(request, 'shopping_cart.html', context)
 
 def checkout(request):
+    payment_form = AddPaymentForm()
     basket = Basket(request)
     address_form = UserAddressForm()
     total_price = str(basket.get_total_price())
-    print(request.user)
     addresses = ''
     address = ''
     if request.user.is_authenticated:
@@ -88,7 +89,7 @@ def checkout(request):
         'addresses':addresses,
         'address_form':address_form,
         'total_price':total_price,
-        
+        'payment_form':payment_form,
     }
     return render(request, 'checkout.html', context)
 
