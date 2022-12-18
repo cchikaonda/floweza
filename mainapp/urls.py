@@ -22,6 +22,11 @@ urlpatterns = [
     path("add_address/", add_address, name="add_address"),
     path("addresses/edit/<slug:id>/", edit_address, name="edit_address"),
     path("deliverychoices", deliverychoices, name="deliverychoices"),
+
+    path("add_address_from_checkout", add_address_from_checkout, name="add_address_from_checkout"),
+
+
+    
     
     
     

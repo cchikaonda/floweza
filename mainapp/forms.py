@@ -4,10 +4,9 @@ from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.views.generic import UpdateView
 from django.db import models
 from django_countries.fields import CountryField
-# from constance.admin import ConstanceAdmin, ConstanceForm, Config
+from inventory.models import Item
 from djmoney.forms.widgets import MoneyWidget
 from django.contrib.auth import authenticate, login, logout, get_user_model
-from phonenumber_field.formfields import PhoneNumberField
 from django.contrib.auth.models import Group
 from django.contrib.admin.widgets import FilteredSelectMultiple
 
@@ -202,7 +201,7 @@ class EditUserForm(forms.ModelForm):
 
         widgets = {
             'email': forms.EmailInput(attrs={'class': 'form-control', 'style': 'width: 300px;'}),
-            'phone_number': forms.TextInput(attrs={'class': 'form-control', 'style': 'width: 300px;'}),
+            'phone_number': forms.TextInput(attrs={'class': 'form-control', 'style': 'width: 300px;', 'id':'phone_number'}),
             'user_permissions': forms.SelectMultiple(attrs={'style': 'width: 350px; height: 200px;'})
         }
 
@@ -213,10 +212,7 @@ class UserAddressForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # self.fields["full_name"].widget.attrs.update(
-        #     {"class": "form-control mb-2 account-form", "placeholder": "Full Name"}
-        # )
-        # self.fields["phone"].widget.attrs.update({"class": "form-control mb-2 account-form", "placeholder": "Phone"})
+    
         self.fields["full_name"].widget.attrs.update(
             {"class": "form-control mb-2 account-form", "placeholder": "Full Name"}
         )
@@ -230,5 +226,13 @@ class UserAddressForm(forms.ModelForm):
             {"class": "form-control mb-2 account-form", "placeholder": "Physical Address"}
         )
         self.fields["phone_number"].widget.attrs.update(
-            {"class": "form-control mb-2 account-form", "placeholder": "Phone NUmber"}
+            {"class": "form-control mb-2 account-form", "placeholder": "Phone Number", 'id':'phone_number'}
         )
+
+class ItemSearchForm(forms.ModelForm):
+    class Meta:
+        model = Item
+        fields = ('item_name',)
+        widgets = {
+            'item_name': forms.TextInput(attrs={'placeholder': 'What do yo u need?'}),
+        }

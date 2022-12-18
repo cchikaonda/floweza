@@ -9,7 +9,6 @@
    
     <div class="humberger__menu__cart">
         <ul>
-            <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
             <li><a href="{% url 'shopping_cart' %}"><i class="fa fa-shopping-basket"></i> <span>{{basket|length}}</span></a></li>
         </ul>
         {% if basket|length > 0 %}
@@ -39,16 +38,17 @@
             <li><a href="{% url 'shop' %}">Shop</a></li>
             <li><a href="#">Pages</a>
                 <ul class="header__menu__dropdown">
-                    <li><a href="#">Shop Details</a></li>
+                    <li><a href="{% url 'shop' %}">Shop</a></li>
                     <li><a href="{% url 'shopping_cart' %}">Shoping Cart</a></li>
-                    <li><a href="{% url 'checkout' %}">Check Out</a></li>
                 </ul>
             </li>
             <li class="orders_and_personal_detailsbtn"><a href="{% url 'pages' %}">Orders/Personal Details</a></li>
             <li><a href="./contact.html">Contact</a></li>
+            {% if user.is_authenticated %}
             <li>
                 <a href="{% url 'logout_request' %}"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a>
             </li>
+            {% endif %}
         </ul>
     </nav>
     <div id="mobile-menu-wrap"></div>
@@ -74,7 +74,7 @@
                     <div class="header__top__left">
                         <ul>
                             <li><i class="fa fa-envelope"></i> MALAWI</li>
-                            <li>Free Delivery for all Orders of atleast MWK 10 000</li>
+                            <li>Free Delivery for all Orders of atleast MWK 300 000</li>
                         </ul>
                     </div>
                 </div>
@@ -83,7 +83,6 @@
                         <div class="header__top__right__social">
                             <a href="#"><i class="fa fa-facebook"></i></a>
                             <a href="#"><i class="fa fa-twitter"></i></a>
-                            <a href="#"><i class="fa fa-linkedin"></i></a>
                         </div>
                         <div class="header__top__right__language">
                             <img src="{% static 'img/language.png' %}" alt="">
@@ -108,7 +107,7 @@
                         </div>
                         
                         <div class="header__top__right__auth">
-                            <a href="#"><i class="fa fa-user"></i>Register</a>
+                            <a href="{% url 'register' %}"><i class="fa fa-user"></i>Register</a>
                         </div>
                         {% endif %}
                        
@@ -131,9 +130,8 @@
                         <li class="top-menu-item1"><a href="{% url 'shop' %}">Shop</a></li>
                         <li class="top-menu-item1"><a href="#">Pages</a>
                             <ul class="header__menu__dropdown">
-                                <li><a href="#">Shop Details</a></li>
+                                <li><a href="{% url 'shop' %}">Shop</a></li>
                                 <li><a href="{% url 'shopping_cart' %}">Shoping Cart</a></li>
-                                <li><a href="{% url 'checkout' %}">Check Out</a></li>
                             </ul>
                         </li>
                         <li class="orders_and_personal_detailsbtn"><a href="{% url 'pages' %}">Orders/Personal Details</a></li>
@@ -145,7 +143,6 @@
             <div class="col-lg-3" id="top-menu-item2">
                 <div class="header__cart header__top__right__auth">
                     <ul>
-                        <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
                         <li><a href="{% url 'shopping_cart' %}"><i class="fa fa-shopping-basket"></i> <span>{{basket|length}}</span></a></li>
                     </ul>
                     {% if basket|length > 0 %}

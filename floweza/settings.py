@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'order',
     'constance',
     'crispy_forms',
+    'phonenumber_field',
 ]
 
 MIDDLEWARE = [

@@ -16,4 +16,9 @@ admin.site.register(OrderItem)
 
 admin.site.register(Order)
 
-admin.site.register(Payment)
+class   PaymentAdmin(admin.ModelAdmin):
+    list_display = ('order_id','payment_mode','paid_amount','reference','created_at','updated_at')
+    search_fields = ['payment_mode',]
+    class Meta:
+        model = Payment
+admin.site.register(Payment, PaymentAdmin)

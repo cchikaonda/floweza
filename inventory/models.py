@@ -14,6 +14,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from datetime import date, timedelta, datetime, time
+from mainapp.models import CustomUser
 
 
 class ItemCategory(models.Model):
@@ -29,6 +30,7 @@ class ItemCategory(models.Model):
 
 class Item(models.Model):
     item_name = models.CharField(max_length=100)
+    seller = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True)
     item_description = models.TextField()
     image = models.ImageField(default="ecom_product6_b.png", upload_to='items/', null=True, blank=True)
     price = MoneyField(max_digits=14, decimal_places=2, default_currency='MWK')

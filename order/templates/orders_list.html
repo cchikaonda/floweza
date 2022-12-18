@@ -1,0 +1,98 @@
+{% extends 'base_mainapp.html' %}
+{% load static %}
+
+{% block body %}
+<main class="pt-5">
+    <div class="container">
+        <div class="login d-flex align-items-center">
+          <div class="col-12 col-md-12 col-lg-12 mx-auto">
+            
+            <h1 class="h2">Your Orders</h1>
+            {% if orders %}
+            <div>Manage your <b>Orders</b></div>
+            <hr /> 
+            <div class="container px-0 mb-4">
+            <div class="row">
+                
+                <div class="card-body">
+                {% if request.user.seller == True %}
+                {% elif request.user.transporter == True %}
+                {% elif request.user.admin == True %}
+                {% else %}
+                    <table class="table table-bordered table-striped" id="item-table">
+                      <thead >
+                        <tr>
+                            <th>#</th>
+                            <th >Order ID</th>
+                            <th >Customer</th>
+                            <th>Address</th>
+                            <th>Items</th>
+                            <th>Payments</th>
+                            <th>Order total</th>
+                            <th>Transporter</th>
+                            <th>Status</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for order in orders %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ order.get_code }}</td>
+                                <td>{{ order.customer.full_name }}</td>
+                                <td>{{ order.address.full_name }}, {{ order.address.phone_number }}, {{ order.address.area }}, {{ order.address.district }}, {{ order.address.physical_address }}</td>
+                                <td>
+                                    {% for item in order.items.all %}
+                                    {{ item }} Seller: {{item.item.seller.full_name}}({{item.item.seller.phone_number}})
+                                    {% endfor %}
+                                </td>
+                                <td>
+                                    {% for payment in order.payments.all %}
+                                        ({{ payment.paid_amount}})
+                                    {% endfor %}
+                                </td>
+                                <td>{{ order.order_total }}</td>
+                                <td>{{ order.delivery_option.transporter.full_name}}
+                                    {% if order.delivery_option.transporter.phone_number %}
+                                    ({{ order.delivery_option.transporter.phone_number}})
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if order.order_status == "Pending" %}
+                                     <span class="badge badge-pill badge-warning">{{order.order_status}}</span> 
+                                    {% elif order.order_status == "Awaiting Delivery" %}
+                                    <span class="badge badge-pill badge-info">{{order.order_status}}</span> 
+                                    {% else %}
+                                    <span class="badge badge-pill badge-success">{{order.order_status}}</span> 
+                                    {% endif %}
+                                </td>
+
+                                <td class="text-center">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm btn-light show-form-update" data-url="#" data-toggle="tooltip" title="Edit {{ items.item_name }} ">
+                                            <a class="fa fa-pencil"></a>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                      </tbody>
+                    </table>  
+                
+                {% endif %}
+                </div> 
+                
+            </div>
+            </div>
+            {% else %}
+            <div class="card-body text-center border mb-2 mt-2">
+
+                <a class="btn btn-default disabled" style="width: 100px; height: 100px; border-style: dotted; border-radius: 2ex; border-width: 3px;" ></a> <br>
+    
+                <strong> You do not have orders!</strong> <br>
+            </div>
+            {% endif %}
+    </div>
+</div>
+            </div>
+</main>
+{% endblock body %}

@@ -70,7 +70,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     active = models.BooleanField(default=True) #can login
     admin = models.BooleanField(default=False) # Adminstrator
     seller = models.BooleanField(default=False) #seller
-    customer = models.BooleanField(default=False)
+    customer = models.BooleanField(default=True)
     transporter = models.BooleanField(default=False)
     timestamp = models.DateTimeField(auto_now_add=True)
     image = models.ImageField(default = "avatar0.jpg", null = True, blank = True)
@@ -136,7 +136,7 @@ class Address(models.Model):
     """
     customer = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     full_name = models.CharField(max_length=150)
-    phone_number = PhoneNumberField(null = True, blank = True)
+    phone_number = PhoneNumberField()
     area = models.CharField(max_length=50)
     district = models.CharField(max_length=150)
     physical_address = models.CharField(max_length=255)
@@ -155,9 +155,9 @@ class Address(models.Model):
 
 class DeliveryOptions(models.Model):
     """
-    The Delivery methods table contining all delivery
+    The Delivery methods table containing all delivery
     """
-
+    transporter = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     DELIVERY_CHOICES = [
         ("IS", "In Store"),
         ("HD", "Home Delivery"),
@@ -197,7 +197,6 @@ class DeliveryOptions(models.Model):
         help_text=_("Required"),
         max_length=255,
     )
-    order = models.IntegerField(verbose_name=_("list order"), help_text=_("Required"), default=0)
     is_active = models.BooleanField(default=True)
 
     class Meta:

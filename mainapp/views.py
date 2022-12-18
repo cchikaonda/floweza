@@ -25,6 +25,7 @@ from inventory.models import ItemCategory, Item
 from django.http import HttpResponse
 from basket.basket import Basket
 from order.forms import *
+from order.models import *
 
 
 
@@ -38,49 +39,117 @@ def logout_request(request):
     return redirect('index')
 
 def index(request):
+    item_search_form = ItemSearchForm()
     item_categories = ItemCategory.objects.all()
+    query = request.POST.get("item_name", None)
     items = Item.objects.all()
+    items_count = items.count()
+
+    if query is not None:
+        items = (items.filter(item_name__startswith  = query))|items.filter(item_name__icontains = query)
+        items_count = items.count()
+        
     context = {
+        'item_search_form':item_search_form,
         'items':items,
+        'items_count':items_count,
         'item_categories':item_categories,
         'title':'Floweza MIS',
     }
     return render(request, 'index.html', context=context)
 
 def shop(request):
+    item_search_form = ItemSearchForm()
     item_categories = ItemCategory.objects.all()
+    query = request.POST.get("item_name", None)
     items = Item.objects.all()
+    items_count = items.count()
+
+    if query is not None:
+        items = (items.filter(item_name__startswith  = query))|items.filter(item_name__icontains = query)
+        items_count = items.count()
+        
     context = {
         'items':items,
+        'items_count':items_count,
         'item_categories':item_categories,
         'title':'Floweza MIS',
         'header':'Shop',
+        'item_search_form':item_search_form,
     }
     return render(request, 'shop.html', context)
 
 def shopping_cart(request):
+    item_categories = ItemCategory.objects.all()
     basket = Basket(request)
     deliveryoptions = DeliveryOptions.objects.all()
     delivery_cost = str(basket.get_delivery_price())
+    
     context = {
         'title':'Floweza MIS',
         'header':'Shopping Cart',
         'basket':basket,
         'deliveryoptions':deliveryoptions,
         'delivery_cost':delivery_cost,
+        'item_categories':item_categories,
     }
     return render(request, 'shopping_cart.html', context)
 
 def checkout(request):
-    payment_form = AddPaymentForm()
+    payment_form = AddPaymentForm(request.POST or None)
     basket = Basket(request)
     address_form = UserAddressForm()
     total_price = str(basket.get_total_price())
     addresses = ''
     address = ''
+    # paid_amount = payment_form.cleaned_data.get('paid_amount')
     if request.user.is_authenticated:
-        address = Address.objects.get(customer=request.user, default = True)
-        addresses = Address.objects.filter(customer=request.user, default = False)
+        addresses_check = Address.objects.filter(customer=request.user)
+        if addresses_check.exists():
+            address = Address.objects.get(customer=request.user, default = True)
+            addresses = Address.objects.filter(customer=request.user, default = False)
+    
+    if request.method == "POST":
+        if payment_form.is_valid():
+            paid_amount = payment_form.cleaned_data.get('paid_amount')
+            payment_mode = request.POST.get('payment_mode')
+            reference = request.POST.get('reference')
+
+            order_total_cost =  basket.get_total_price()
+
+            session = request.session
+            delivery_id = session["purchase"]["delivery_id"]
+            delivery_option = DeliveryOptions.objects.get(id = delivery_id)
+            
+            order = Order.objects.create(customer = request.user, address = address, order_total_cost = order_total_cost, delivery_option = delivery_option)
+            order.code = order.get_code()
+            order.save()
+            code = order.get_code()
+
+            
+            
+            for item in basket:
+                
+                ordered_item = OrderItem.objects.create(
+                    order_id=code, item =item["item"], ordered_item_price=item["price"], quantity=item["qty"]
+                )
+                order.items.add(ordered_item)
+                order.save()
+
+            payment = Payment()
+            payment.payment_mode = payment_mode
+            payment.paid_amount = paid_amount
+            payment.reference = reference
+            
+            payment.order_id = code
+            payment.save()
+            order.payments.add(payment)
+            order.save()
+            messages.success(request, "Order Successfully placed!")
+            del request.session['basket']
+            del request.session['purchase']
+            return redirect('index')
+
     context = {
         'title':'Floweza MIS',
         'header': 'Checkout',
@@ -101,6 +170,7 @@ def item_details(request, id):
         'header': 'Item details',
     }
     return render(request, 'item_details.html', context)
+    
 
 def contact(request):
     item_categories = ItemCategory.objects.all()
@@ -133,6 +203,21 @@ def add_address(request):
     else:
         address_form = UserAddressForm()
     return render(request, "edit_addresses.html", {"form": address_form})
+
+@login_required
+def add_address_from_checkout(request):
+    address_form = UserAddressForm(data=request.POST)
+    if request.method == "POST":
+        if address_form.is_valid():
+            address_form = address_form.save(commit=False)
+            address_form.customer = request.user
+            address_form.save()
+            Address.objects.filter(customer=request.user).update(default=True)
+            messages.success(request, "Address Successfully Created!")
+            return HttpResponseRedirect(reverse("checkout"))
+        else:
+            return HttpResponse("Error handler content", status=400)
+
 
 @login_required
 def set_default(request, id):
@@ -169,32 +254,4 @@ def deliverychoices(request):
 def pages(request):
     user = request.user
     context = {}
-    if user.user_role == 'Admin':
-        if 'user_loggedin' in request.session:
-            return render(request, 'admin/home_admin.html', context=context)
-        else:
-            messages.success(request, "Successfully logged in as Admin")
-            request.session['user_loggedin'] = user.user_role
-            return render(request, 'admin/home_admin.html', context=context)
-    elif user.user_role == 'Seller':
-        if request.COOKIES.get('user_loggedin') == None:
-            request.COOKIES.set('user_loggedin')
-            messages.success(request, "Successfully logged in as Seller")
-        return render(request, 'seller/home_seller.html', context=context)
-    elif user.user_role == 'Transporter':
-        if request.COOKIES.get('user_loggedin') == None:
-            request.COOKIES.set('user_loggedin')
-            messages.success(request, "Successfully logged in as Transporter")
-        return render(request, 'transporter/home_transporter.html', context=context)
-    else:
-        if request.COOKIES.get('user_loggedin') == None:
-            request.COOKIES.set('user_loggedin')
-            messages.success(request, "Successfully logged in as Customer")
-        return render(request, 'customer/home_customer.html', context=context)
-    # except TemplateDoesNotExist:
-    #     html_template = loader.get_template('home/page-404.html')
-    #     return HttpResponse(html_template.render(context, request))
-
-    # except:
-    #     html_template = loader.get_template('home/page-500.html')
-    #     return HttpResponse(html_template.render(context, request))
+    return render(request, 'admin/home_admin.html', context=context)

@@ -7,7 +7,7 @@ from django.views.decorators.http import require_POST
 import json
 from django.http import JsonResponse
 from djmoney.money import Money
-
+from django.forms.models import model_to_dict
 
 # Create your views here.
 
@@ -26,9 +26,20 @@ def basket_remove(request, item_id):
     basket.delete(item.id)
     return redirect ('shopping_cart')
 
+# def basket_update(request):
+#     basket = Basket(request)
+    
+#     if request.method == "POST":
+#         qty = int(request.POST.get('qty'))
+#         basket.update(item = item, qty = qty, override_qty='override')
+#     return redirect ('shopping_cart')
+
+
 def basket_detail(request):
     basket = Basket(request)
     return render(request, 'basket/detail.html', {'basket':basket})
+
+
 
 def basket_update_delivery(request):
     basket = Basket(request)
@@ -45,7 +56,8 @@ def basket_update_delivery(request):
         else:
             session["purchase"]["delivery_id"] = delivery_type.id
             session.modified = True
-            
         response = JsonResponse({"total": str(updated_total_price), "delivery_price": str(delivery_type.delivery_price)})
         return response
+
+
 

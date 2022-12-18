@@ -29,7 +29,7 @@ class AddPaymentForm(forms.ModelForm):
         self.fields['paid_amount'].widget = CustomMoneyWidget(amount_widget = paid_amount.widget, currency_widget = currency.widget)
     class Meta:
         model = Payment
-        fields = ('payment_mode','paid_amount','customer')
+        fields = ('payment_mode','paid_amount','reference')
         widgets = {
                 'paid_amount': forms.TextInput(attrs={'class': 'form-control pos_form',}),
                 'payment_mode': forms.Select(attrs={'class': 'form-control pos_form',}),

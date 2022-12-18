@@ -11,7 +11,7 @@ from constance import config
 from datetime import date
 
 from djmoney.money import Money
-from mainapp.models import CustomUser
+from mainapp.models import *
 from inventory.models import Item
 from django.db.models.functions import Abs
 from phonenumber_field.modelfields import PhoneNumberField
@@ -22,8 +22,6 @@ from django.dispatch import receiver
 class OrderItem(models.Model):
     order_id = models.CharField(default="", max_length=30)
     item = models.ForeignKey(Item, on_delete = models.CASCADE)
-    customer = models.ForeignKey(CustomUser, on_delete = models.SET_NULL, null = True)
-    ordered = models.BooleanField(default=False)
     quantity = models.IntegerField(default=0)
     ordered_item_price = MoneyField(max_digits=14, decimal_places=2, default_currency='MWK', default= 0.0)
     ordered_items_total = MoneyField(max_digits=14, decimal_places=2, default_currency='MWK', default= 0.0)
@@ -51,7 +49,7 @@ class OrderItem(models.Model):
             return 0
 
     def __str__(self):
-        return f"{self.quantity} {self.item.unit} of {self.item.item_name}"
+        return f"{self.item.item_name} ({self.quantity})"
     
     @property
     def get_ordered_item_category(self):
@@ -76,11 +74,10 @@ class Payment(models.Model):
         ('Bank', 'Bank'),
         
     )
-    customer = models.ForeignKey(CustomUser, on_delete = models.SET_NULL, null = True)
     payment_mode = models.CharField(max_length = 15, choices = payment_options, default='Cash')
+    reference = models.CharField(max_length=20, null=True)
     order_id = models.CharField(max_length=20, null=True)
-    order_type = models.CharField(max_length=20, null=True)
-    paid_amount = MoneyField(max_digits=14, decimal_places=2, default_currency='MWK', default= 0.0)
+    paid_amount = MoneyField(max_digits=14, decimal_places=2, default_currency='MWK')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -99,14 +96,14 @@ class Order(models.Model):
             return 'ORD%04d'%self.pk
     code = models.CharField(max_length=50, null=True, default="0000")
     customer = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True)
+    delivery_option = models.ForeignKey(DeliveryOptions, on_delete=models.CASCADE, null=True)
+    address = models.ForeignKey(Address, on_delete=models.CASCADE, null=True)
     items = models.ManyToManyField(OrderItem)
     order_status = models.CharField(max_length = 20, choices = order_status_options, default='Pending')
     payments = models.ManyToManyField(Payment)
     order_total_cost = MoneyField(max_digits=14, decimal_places=2, default_currency='MWK', default= 0.0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    payment_reference = models.CharField(max_length=50, null=True)
-
   
     def __str__(self):
         return '{1} {0}'.format(self.created_at, self.customer)
