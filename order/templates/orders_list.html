@@ -29,8 +29,10 @@
                             <th>Items</th>
                             <th>Payments</th>
                             <th>Order total</th>
+                            <th>Balance</th>
                             <th>Transporter</th>
                             <th>Status</th>
+                            <th class="text-center" colspan="2" >Action</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -50,7 +52,8 @@
                                         ({{ payment.paid_amount}})
                                     {% endfor %}
                                 </td>
-                                <td>{{ order.order_total }}</td>
+                                <td>{{ order.order_total}}</td>
+                                <td>{{ order.get_balance}}</td>
                                 <td>{{ order.delivery_option.transporter.full_name}}
                                     {% if order.delivery_option.transporter.phone_number %}
                                     ({{ order.delivery_option.transporter.phone_number}})
@@ -61,19 +64,40 @@
                                      <span class="badge badge-pill badge-warning">{{order.order_status}}</span> 
                                     {% elif order.order_status == "Awaiting Delivery" %}
                                     <span class="badge badge-pill badge-info">{{order.order_status}}</span> 
-                                    {% else %}
+                                    {% elif order.order_status == "Delivered" %}
                                     <span class="badge badge-pill badge-success">{{order.order_status}}</span> 
+                                    {% else %}
+                                    <span class="badge badge-pill badge-danger">{{order.order_status}}</span> 
                                     {% endif %}
                                 </td>
 
                                 <td class="text-center">
                                     <div class="btn-group">
-                                        <button type="button" class="btn btn-sm btn-light show-form-update" data-url="#" data-toggle="tooltip" title="Edit {{ items.item_name }} ">
-                                            <a class="fa fa-pencil"></a>
-                                        </button>
+                                      <button type="button" class="btn site-btn" data-toggle="tooltip" title="Update Order Status">
+                                            <a href="{% url 'edit_order' order.id %}" class="fa fa-pencil"></a>
+                                      </button>
                                     </div>
                                 </td>
+                                {% if order.get_balance > zero_balance %}
+                                <td class="text-center">
+                                    
+                                    <div class="btn-group">
+                                        
+                                        <button type="button" class="btn site-btn" data-toggle="tooltip" title="Add Payment">
+                                            <a href="{% url 'add_payment' order.id %}"class="fa fa-money"></a>
+                                        </button>
+                                        
+                                        
+                                        
+                                    </div>
+                                    
+                                      
+                                </td>
+                                {% else %}
+                                <td></td>
+                                {% endif %}
                             </tr>
+                            
                             {% endfor %}
                       </tbody>
                     </table>  

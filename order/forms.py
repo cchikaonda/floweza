@@ -33,5 +33,13 @@ class AddPaymentForm(forms.ModelForm):
         widgets = {
                 'paid_amount': forms.TextInput(attrs={'class': 'form-control pos_form',}),
                 'payment_mode': forms.Select(attrs={'class': 'form-control pos_form',}),
-                'paid_amount': forms.TextInput(attrs={'class': 'form-control pos_form',}),
+                'reference': forms.TextInput(attrs={'class': 'form-control pos_form',}),
+        }
+
+class OrderForm(forms.ModelForm):
+    class Meta:
+        model = Order
+        fields = ('order_status',)
+        widgets = {
+            'order_status': forms.Select(attrs={'class': 'form-control bold'}),
         }

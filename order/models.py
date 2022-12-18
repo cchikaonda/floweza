@@ -31,7 +31,6 @@ class OrderItem(models.Model):
     def price(self):
         return self.item.selling_price()
     
-
     @property
     def amount(self):
         amount = MoneyField()
@@ -112,8 +111,6 @@ class Order(models.Model):
     def get_code(self):
         return self.gen_code
     
-    
-    
     def order_total(self):
         total = Money('0.0', 'MWK')
         for order_item in self.items.all():
@@ -132,23 +129,17 @@ class Order(models.Model):
             discount_total += ordered_item.get_item_discount()
         return discount_total
     
-
-    
     def total_paid_amount(self):
         sum_paid = Money(0.0, 'MWK')
         for payment in self.payments.all():
             sum_paid += payment.paid_amount
         return sum_paid
 
-
-    
     def get_balance(self):
         balance = Money(0.0, 'MWK')
         sum_paid = self.total_paid_amount()
-        if sum_paid < self.order_total_due():
-            return self.order_total_due() - sum_paid
-        else:
-            return balance
+        balance = self.order_total_cost - sum_paid
+        return balance
     
     def default_amount_paid(self):
         default_money = Money(0.0, 'MWK')

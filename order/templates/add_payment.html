@@ -1,0 +1,58 @@
+{% extends 'base_mainapp.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block body %}
+<main class="pt-5 mb-4">
+    <div class="container">
+        <div class="login d-flex align-items-center card">
+          <div class="col-12 col-md-12 col-lg-12 mt-2 mb-2 mr-2 ml-2">
+            
+           <h1 class="h2"><strong>Add Payment for Order {{order.code}} </strong></h1> <br/>
+           <strong>Items: </strong> {% for item in order.items.all %} {{item}}  {% endfor %}
+
+           <form method="post">
+            {% csrf_token %}
+                <div class="form-row border-top mt-4">
+                    <div class="form-group col-md-3 mb-2 mt-4">
+                    <strong><label for="customer">Customer: </label> <br/></strong>
+                        {{order.customer.full_name}}
+                    </div>
+                    <div class="form-group col-md-3 mb-2 mt-4">
+                    <strong><label for="customer">Delivery Option: </label> <br/></strong>  
+                        {{order.delivery_option}}
+                    </div>
+                    <div class="form-group col-md-3 mb-2 mt-4">
+                        <strong><label for="customer">Transporter: </label> <br/></strong>  
+                            {{order.delivery_option.transporter.full_name}} ({{order.delivery_option.transporter.phone_number}})
+                    </div>
+                    <div class="form-group col-md-3 mb-2 mt-4">
+                        <strong><label for="customer">Balance: </label> <br/></strong>  
+                           <i class="badge badge-info">{{order.get_balance}}</i>
+                    </div>
+                </div>
+                <div class="form-row border-top mt-4">
+                    <div class="form-group col-md-3 mb-2 mt-4">
+                        <label class="fw-bold"> <strong>{{ form.payment_mode.label}}</strong></label> <br/>
+                        {{ form.payment_mode}}
+                    </div>
+                    <div class="form-group col-md-3 mb-2 mt-4">
+                        <label class="fw-bold"> <strong>{{ form.paid_amount.label}}</strong></label> <br/>
+                        {{ form.paid_amount}}
+                    </div>
+                    <div class="form-group col-md-3 mb-2 mt-4">
+                        <label class="fw-bold"> <strong>{{ form.reference.label}}</strong></label> <br/>
+                        {{ form.reference}}
+                    </div>
+                </div>
+            
+                <div>
+                    <button type="submit" style="justify-content: right;" class="btn site-btn">SUBMIT</button>
+                </div>
+           </form>
+            
+    </div>
+</div>
+</div>
+</main>
+{% endblock body %}
