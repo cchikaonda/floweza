@@ -36,9 +36,7 @@ class Item(models.Model):
     price = MoneyField(max_digits=14, decimal_places=2, default_currency='MWK')
     discount_price = MoneyField(max_digits=14, null=True, blank=True, decimal_places=2, default_currency='MWK')
     category = models.ForeignKey(ItemCategory, on_delete=models.CASCADE)
-    quantity_at_hand = models.IntegerField(default=0)
     active = models.BooleanField(default=True)
-    slug = models.SlugField(unique=True)
 
     def __str__(self):
         return self.item_name

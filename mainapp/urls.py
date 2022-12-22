@@ -25,6 +25,18 @@ urlpatterns = [
 
     path("add_address_from_checkout", add_address_from_checkout, name="add_address_from_checkout"),
 
+    path("category_list/", category_list, name="category_list"),
+    path('category_create/', category_create, name = 'category_create'),
+    path('category_update/<int:id>/', category_update, name = 'category_update'),
+
+    path("item_list/", item_list, name="item_list"),
+    path('item_create/', item_create, name = 'item_create'),
+    path('item_update/<int:id>/', item_update, name = 'item_update'),
+
+    
+
+    
+
 
     
     

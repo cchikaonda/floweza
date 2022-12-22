@@ -31,7 +31,7 @@ class AddPaymentForm(forms.ModelForm):
         model = Payment
         fields = ('payment_mode','paid_amount','reference')
         widgets = {
-                'paid_amount': forms.TextInput(attrs={'class': 'form-control pos_form',}),
+                'paid_amount': forms.TextInput(attrs={'class': 'form-control pos_form','type':'number'}),
                 'payment_mode': forms.Select(attrs={'class': 'form-control pos_form',}),
                 'reference': forms.TextInput(attrs={'class': 'form-control pos_form',}),
         }

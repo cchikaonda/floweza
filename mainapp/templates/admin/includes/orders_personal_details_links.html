@@ -1,0 +1,24 @@
+<nav class="flex-sm-00-auto" aria-label="breadcrumb" id = "category_list">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item" aria-current="page"></li>
+            <a class="link-fx text-success" href="{% url 'pages' %}"> Dashboard</a>
+        </li>
+        <li class="breadcrumb-item"></li>
+        
+        <li class="breadcrumb-item" aria-current="page">
+            <a class="link-fx" href="{% url 'category_list' %}">Manage Item Categories</a>
+        </li>
+        <li class="breadcrumb-item" aria-current="page">
+            <a class="link-fx" href="{% url 'item_list' %}">Manage Items</a>
+        </li>
+        <li class="breadcrumb-item" aria-current="page">
+            <a class="link-fx" href="{% url 'order_list' %}">Orders</a>
+        </li>
+        <li class="breadcrumb-item" aria-current="page">
+            <a class="link-fx" href="{% url 'order_list' %}">Login & Security</a>
+        </li>
+        <li class="breadcrumb-item" aria-current="page">
+            <a class="link-fx" href="{% url 'addresses' %}">Your Addresses</a>
+        </li>
+    </ol>
+</nav>

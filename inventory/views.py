@@ -24,6 +24,7 @@ from datetime import date, timedelta, datetime
 from django.db.models.functions import Lower
 from djmoney.models.fields import MoneyField
 from accounts.forms import *
+from inventory.forms import *
 
 
 

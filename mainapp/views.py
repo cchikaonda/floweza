@@ -26,6 +26,7 @@ from django.http import HttpResponse
 from basket.basket import Basket
 from order.forms import *
 from order.models import *
+from inventory.forms import *
 
 
 
@@ -42,7 +43,7 @@ def index(request):
     item_search_form = ItemSearchForm()
     item_categories = ItemCategory.objects.all()
     query = request.POST.get("item_name", None)
-    items = Item.objects.all()
+    items = Item.objects.filter(active = True)
     items_count = items.count()
 
     if query is not None:
@@ -62,7 +63,7 @@ def shop(request):
     item_search_form = ItemSearchForm()
     item_categories = ItemCategory.objects.all()
     query = request.POST.get("item_name", None)
-    items = Item.objects.all()
+    items = Item.objects.filter(active = True)
     items_count = items.count()
 
     if query is not None:
@@ -170,7 +171,75 @@ def item_details(request, id):
         'header': 'Item details',
     }
     return render(request, 'item_details.html', context)
-    
+
+def category_list(request):
+    categories = ItemCategory.objects.all()
+    context = {
+        'categories':categories,
+        'title':'Floweza MIS',
+        'header': 'Item Category List',
+        
+    }
+    return render(request, 'admin/item_categories/category_list.html', context)
+
+@login_required
+def category_create(request):
+    if request.method == 'POST':
+        form = AddItemCategoryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('category_list')
+    else:
+        form = AddItemCategoryForm()
+    return render(request, 'admin/item_categories/category_create.html', {'form':form,})
+
+@login_required
+def category_update(request, id):
+    category = get_object_or_404(ItemCategory, id=id)
+    form = AddItemCategoryForm(instance=category)
+    if request.method == 'POST':
+        form = AddItemCategoryForm(request.POST, instance=category)
+        if form.is_valid():
+            form.save()
+            return redirect('category_list')
+    else:
+        form = AddItemCategoryForm(instance=category)
+    return render(request, 'admin/item_categories/category_update.html', {'form':form,},)
+
+def item_list(request):
+    items = Item.objects.filter(seller = request.user)
+    context = {
+        'items':items,
+        'title':'Floweza MIS',
+        'header': 'Item List',
+        
+    }
+    return render(request, 'admin/items/items_list.html', context)
+
+@login_required
+def item_create(request):
+    if request.method == 'POST':
+        form = AddItemForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('item_list')
+    else:
+        form = AddItemForm()
+    return render(request, 'admin/items/item_create.html', {'form':form,})
+
+@login_required
+def item_update(request, id):
+    product = get_object_or_404(Item, id=id)
+    form = AddItemForm(instance=product)
+    if request.method == 'POST':
+        form = AddItemForm(request.POST, instance=product)
+        if form.is_valid():
+            form.save()
+            return redirect('item_list')
+    else:
+        form = AddItemForm(instance=product)
+    return render(request, 'admin/items/item_update.html', {'form':form,},)
+
 
 def contact(request):
     item_categories = ItemCategory.objects.all()

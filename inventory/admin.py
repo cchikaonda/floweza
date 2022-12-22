@@ -20,7 +20,7 @@ class ItemAdmin(admin.ModelAdmin):
     list_display = (
         'item_name','price','discount_price',
         'category',
-        'item_description', 'seller','slug','quantity_at_hand', 'active','image'
+        'item_description', 'seller', 'active','image'
         )
     search_fields = ['item_name', ]
     class Meta:
