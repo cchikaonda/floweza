@@ -16,92 +16,91 @@
             <div class="row">
                 
                 <div class="card-body">
-                {% if request.user.seller == True %}
-                {% elif request.user.transporter == True %}
-                {% elif request.user.admin == True %}
-                {% else %}
-                    <table class="table table-bordered table-striped" id="item-table">
-                      <thead >
-                        <tr>
-                            <th>#</th>
-                            <th >Order ID</th>
-                            <th >Customer</th>
-                            <th>Address</th>
-                            <th>Items</th>
-                            <th>Payments</th>
-                            <th>Order total</th>
-                            <th>Balance</th>
-                            <th>Transporter</th>
-                            <th>Status</th>
-                            <th class="text-center" colspan="2" >Action</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {% for order in orders %}
-                            <tr>
-                                <td>{{ forloop.counter }}</td>
-                                <td>{{ order.get_code }}</td>
-                                <td>{{ order.customer.full_name }}</td>
-                                <td>{{ order.address.full_name }}, {{ order.address.phone_number }}, {{ order.address.area }}, {{ order.address.district }}, {{ order.address.physical_address }}</td>
-                                <td>
-                                    {% for item in order.items.all %}
-                                    {{ item }} Seller: {{item.item.seller.full_name}}({{item.item.seller.phone_number}})
-                                    {% endfor %}
-                                </td>
-                                <td>
-                                    {% for payment in order.payments.all %}
-                                        ({{ payment.paid_amount}})
-                                    {% endfor %}
-                                </td>
-                                <td>{{ order.order_total}}</td>
-                                <td>{{ order.get_balance}}</td>
-                                <td>{{ order.delivery_option.transporter.full_name}}
-                                    {% if order.delivery_option.transporter.phone_number %}
-                                    ({{ order.delivery_option.transporter.phone_number}})
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    {% if order.order_status == "Pending" %}
-                                     <span class="badge badge-pill badge-warning">{{order.order_status}}</span> 
-                                    {% elif order.order_status == "Awaiting Delivery" %}
-                                    <span class="badge badge-pill badge-info">{{order.order_status}}</span> 
-                                    {% elif order.order_status == "Delivered" %}
-                                    <span class="badge badge-pill badge-success">{{order.order_status}}</span> 
-                                    {% else %}
-                                    <span class="badge badge-pill badge-danger">{{order.order_status}}</span> 
-                                    {% endif %}
-                                </td>
+                {% if request.user.seller == True or request.user.transporter == True or request.user.admin == True %}
+                <table class="table table-bordered table-striped" id="item-table">
+                    <thead >
+                      <tr>
+                          <th>#</th>
+                          <th >Order ID</th>
+                          <th >Customer</th>
+                          <th>Address</th>
+                          <th>Items</th>
+                          <th>Payments</th>
+                          <th>Order total</th>
+                          <th>Balance</th>
+                          <th>Transporter</th>
+                          <th>Status</th>
+                          <th class="text-center" colspan="2" >Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for order in orders %}
+                          <tr>
+                              <td>{{ forloop.counter }}</td>
+                              <td>{{ order.get_code }}</td>
+                              <td>{{ order.customer.full_name }}</td>
+                              <td>{{ order.address.full_name }}, {{ order.address.phone_number }}, {{ order.address.area }}, {{ order.address.district }}, {{ order.address.physical_address }}</td>
+                              <td>
+                                  {% for item in order.items.all %}
+                                  {{ item }} Seller: {{item.item.seller.full_name}}({{item.item.seller.phone_number}})
+                                  {% endfor %}
+                              </td>
+                              <td>
+                                  {% for payment in order.payments.all %}
+                                      ({{ payment.paid_amount}})
+                                  {% endfor %}
+                              </td>
+                              <td>{{ order.order_total}}</td>
+                              <td>{{ order.get_balance}}</td>
+                              <td>{{ order.delivery_option.transporter.full_name}}
+                                  {% if order.delivery_option.transporter.phone_number %}
+                                  ({{ order.delivery_option.transporter.phone_number}})
+                                  {% endif %}
+                              </td>
+                              <td>
+                                  {% if order.order_status == "Pending" %}
+                                   <span class="badge badge-pill badge-warning">{{order.order_status}}</span> 
+                                  {% elif order.order_status == "Awaiting Delivery" %}
+                                  <span class="badge badge-pill badge-info">{{order.order_status}}</span> 
+                                  {% elif order.order_status == "Delivered" %}
+                                  <span class="badge badge-pill badge-success">{{order.order_status}}</span> 
+                                  {% else %}
+                                  <span class="badge badge-pill badge-danger">{{order.order_status}}</span> 
+                                  {% endif %}
+                              </td>
 
-                                <td class="text-center">
-                                    <div class="btn-group">
-                                      <button type="button" class="btn site-btn" data-toggle="tooltip" title="Update Order Status">
-                                            <a href="{% url 'edit_order' order.id %}" class="fa fa-pencil"></a>
-                                      </button>
-                                    </div>
-                                </td>
-                                {% if order.get_balance > zero_balance %}
-                                <td class="text-center">
-                                    
-                                    <div class="btn-group">
-                                        
-                                        <button type="button" class="btn site-btn" data-toggle="tooltip" title="Add Payment">
-                                            <a href="{% url 'add_payment' order.id %}"class="fa fa-money"></a>
-                                        </button>
-                                        
-                                        
-                                        
-                                    </div>
-                                    
+                              <td class="text-center">
+                                  <div class="btn-group">
+                                    <button type="button" class="btn site-btn" data-toggle="tooltip" title="Update Order Status">
+                                          <a href="{% url 'edit_order' order.id %}" class="fa fa-pencil"></a>
+                                    </button>
+                                  </div>
+                              </td>
+                              {% if order.get_balance > zero_balance %}
+                              <td class="text-center">
+                                  
+                                  <div class="btn-group">
                                       
-                                </td>
-                                {% else %}
-                                <td></td>
-                                {% endif %}
-                            </tr>
-                            
-                            {% endfor %}
-                      </tbody>
-                    </table>  
+                                      <button type="button" class="btn site-btn" data-toggle="tooltip" title="Add Payment">
+                                          <a href="{% url 'add_payment' order.id %}"class="fa fa-money"></a>
+                                      </button>
+                                      
+                                      
+                                      
+                                  </div>
+                                  
+                                    
+                              </td>
+                              {% else %}
+                              <td></td>
+                              {% endif %}
+                          </tr>
+                          
+                          {% endfor %}
+                    </tbody>
+                  </table> 
+                {% else %}
+                     
                 
                 {% endif %}
                 </div> 
