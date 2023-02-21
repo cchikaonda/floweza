@@ -30,6 +30,7 @@ from inventory.forms import *
 
 
 
+#logout request
 @login_required
 def logout_request(request):
     logout(request)
@@ -39,6 +40,7 @@ def logout_request(request):
     messages.success(request, "Successfully logged out!")
     return redirect('index')
 
+#index or home page view
 def index(request):
     item_search_form = ItemSearchForm()
     item_categories = ItemCategory.objects.all()
@@ -59,6 +61,7 @@ def index(request):
     }
     return render(request, 'index.html', context=context)
 
+#shop page view
 def shop(request):
     item_search_form = ItemSearchForm()
     item_categories = ItemCategory.objects.all()
@@ -80,6 +83,7 @@ def shop(request):
     }
     return render(request, 'shop.html', context)
 
+#shopping cart view
 def shopping_cart(request):
     item_categories = ItemCategory.objects.all()
     basket = Basket(request)
@@ -96,6 +100,7 @@ def shopping_cart(request):
     }
     return render(request, 'shopping_cart.html', context)
 
+#checkout view
 def checkout(request):
     payment_form = AddPaymentForm(request.POST or None)
     basket = Basket(request)
@@ -163,6 +168,7 @@ def checkout(request):
     }
     return render(request, 'checkout.html', context)
 
+#item details view
 def item_details(request, id):
     item = get_object_or_404(Item, id = id)
     context = {
@@ -172,6 +178,7 @@ def item_details(request, id):
     }
     return render(request, 'item_details.html', context)
 
+#category list view
 def category_list(request):
     categories = ItemCategory.objects.all()
     context = {
@@ -182,6 +189,8 @@ def category_list(request):
     }
     return render(request, 'admin/item_categories/category_list.html', context)
 
+
+# creating Item category view
 @login_required
 def category_create(request):
     if request.method == 'POST':
@@ -193,6 +202,7 @@ def category_create(request):
         form = AddItemCategoryForm()
     return render(request, 'admin/item_categories/category_create.html', {'form':form,})
 
+#Item category update view
 @login_required
 def category_update(request, id):
     category = get_object_or_404(ItemCategory, id=id)
@@ -206,6 +216,7 @@ def category_update(request, id):
         form = AddItemCategoryForm(instance=category)
     return render(request, 'admin/item_categories/category_update.html', {'form':form,},)
 
+#Item list view
 def item_list(request):
     if request.user.is_admin == True:
         items = Item.objects.all()
@@ -219,6 +230,7 @@ def item_list(request):
     }
     return render(request, 'admin/items/items_list.html', context)
 
+#Item create view
 @login_required
 def item_create(request):
     if request.method == 'POST':
@@ -230,6 +242,7 @@ def item_create(request):
         form = AddItemForm()
     return render(request, 'admin/items/item_create.html', {'form':form,})
 
+#Item update view
 @login_required
 def item_update(request, id):
     product = get_object_or_404(Item, id=id)
@@ -244,6 +257,7 @@ def item_update(request, id):
     return render(request, 'admin/items/item_update.html', {'form':form,},)
 
 
+#contact view
 def contact(request):
     item_categories = ItemCategory.objects.all()
     items = Item.objects.all()
@@ -255,12 +269,13 @@ def contact(request):
     }
     return render(request, 'contact.html', context)
 
-
+#Adresses List view
 @login_required
 def addresses(request):
     addresses = Address.objects.filter(customer=request.user)
     return render(request, "addresses.html", {"addresses": addresses})
 
+#Adding address view
 @login_required
 def add_address(request):
     if request.method == "POST":
@@ -276,6 +291,7 @@ def add_address(request):
         address_form = UserAddressForm()
     return render(request, "edit_addresses.html", {"form": address_form})
 
+#Adding address on checkout view
 @login_required
 def add_address_from_checkout(request):
     address_form = UserAddressForm(data=request.POST)
@@ -290,7 +306,7 @@ def add_address_from_checkout(request):
         else:
             return HttpResponse("Error handler content", status=400)
 
-
+#Setting a default Address View
 @login_required
 def set_default(request, id):
     Address.objects.filter(customer=request.user, default=True).update(default=False)
@@ -303,6 +319,7 @@ def set_default(request, id):
 
     return redirect("addresses")
 
+#Edit address View
 @login_required
 def edit_address(request, id):
     if request.method == "POST":
@@ -316,12 +333,14 @@ def edit_address(request, id):
         address_form = UserAddressForm(instance=address)
     return render(request, "edit_addresses.html", {"form": address_form})
 
+#Delivery Choices View
 @login_required
 def deliverychoices(request):
     deliveryoptions = DeliveryOptions.objects.filter(is_active=True)
     return render(request, "delivery_choices.html", {"deliveryoptions": deliveryoptions})
 
 
+#Admin Page View
 @login_required(login_url="/login/")
 def pages(request):
     user = request.user
