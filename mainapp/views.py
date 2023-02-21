@@ -207,7 +207,10 @@ def category_update(request, id):
     return render(request, 'admin/item_categories/category_update.html', {'form':form,},)
 
 def item_list(request):
-    items = Item.objects.filter(seller = request.user)
+    if request.user.is_admin == True:
+        items = Item.objects.all()
+    else:
+        items = Item.objects.filter(seller = request.user)
     context = {
         'items':items,
         'title':'Floweza MIS',

@@ -16,6 +16,7 @@
                 <hr />
 
                 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                    {% if request.user.is_seller == True  or request.user.is_admin == True %}
                     <div class="col">
                         <a href="{% url 'category_list' %}" class="text-reset text-decoration-none" role="button" style="max-width: 540px;">
                         <div class="card mb-3">
@@ -62,6 +63,7 @@
                         </div>
                         </a>
                     </div>
+                    {% endif %}
                     <div class="col">
                         <a href="{% url 'order_list' %}" class="text-reset text-decoration-none" role="button" style="max-width: 540px;">
                         <div class="card mb-3">
