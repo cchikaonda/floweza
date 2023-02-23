@@ -1,0 +1,1 @@
+This App is developed using Django Flamework as backend which is a python Flamework. The frontend is Bootstrap and Javascript

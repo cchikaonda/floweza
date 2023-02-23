@@ -1,0 +1,12 @@
+1. Admin
+username: chifundoshumba@gmail.com
+password: letmein
+
+2. Seller
+username: seller@example.com
+password: letmein
+
+
+3. Transporter
+username: transporter@example.com
+password: letmein
