@@ -1,0 +1,466 @@
+{% load static %}
+{% load crispy_forms_tags %}
+{% load inventory_template_tags %}
+{% get_media_prefix as MEDIA_URL %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{home}}</title>
+  
+    <link rel="stylesheet" href="{% static '/custom_css/page_loader.css' %}" type="text/css">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="{% static '/plugins/fontawesome-free/css/all.min.css' %}" type="text/css">
+
+     <!-- Ionicons -->
+     <link rel="stylesheet" href="{% static '/plugins/fontawesome-free/css/all.min.css' %}" type="text/css">
+     <!-- daterange picker -->
+    <link rel="stylesheet" href="{% static '/plugins/daterangepicker/daterangepicker.css' %}" type="text/css">
+
+     <!-- Bootstrap Color Picker -->
+     <link rel="stylesheet" href="{% static '/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css' %}" type="text/css">
+
+    <!-- iCheck for checkboxes and radio inputs -->
+    <link rel="stylesheet" href="{% static '/plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}" type="text/css">
+
+    <!-- Tempusdominus Bbootstrap 4 -->
+    <link rel="stylesheet" href="{% static '/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css' %}" type="text/css">
+
+    <!-- overlayScrollbars -->
+    <link rel="stylesheet" href="{% static '/plugins/overlayScrollbars/css/OverlayScrollbars.min.css' %}" type="text/css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{% static '/dist/css/adminlte.min.css' %}" type="text/css">
+    <!-- {{form.media.css }} -->
+
+    <link rel="stylesheet" href="{% static '/plugins/intl-tel-input-master/build/css/intlTelInput.css' %}" type="text/css">
+
+    <!-- Bootstrap4 Duallistbox -->
+    <link rel="stylesheet" href="{% static '/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css' %}" type="text/css">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="{% static '/plugins/select2/css/select2.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static '/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css' %}" type="text/css">
+
+    <link rel="stylesheet" href="{% static '/plugins/bootstrap4-datetimepicker-master/build/css/bootstrap-datetimepicker.css' %}" type="text/css">
+
+     <!-- Page JS Plugins CSS -->
+     <link rel="stylesheet" href="{% static '/js/plugins/datatables/dataTables.bootstrap4.css' %}" type="text/css">
+     <link rel="stylesheet" href="{% static '/js/plugins/datatables/buttons-bs4/buttons.bootstrap4.min.css' %}" type="text/css">
+     {% include 'all_css_imports.html' %}
+
+
+    <script>
+      var today = new Date();
+    </script>
+
+    <!--Moment JS-->
+    <!-- <script src="{% static '/build/js/moment.min.js' %}"></script> -->
+
+    <script>
+      $(function () {
+        //Initialize Select2 Elements
+        $('.select2').select2()
+    
+        //Initialize Select2 Elements
+        $('.select2bs4').select2({
+          theme: 'bootstrap4'
+        })
+    
+        //Datemask dd/mm/yyyy
+        $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
+        //Datemask2 mm/dd/yyyy
+        $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
+        //Money Euro
+        $('[data-mask]').inputmask()
+    
+        //Date range picker
+        $('#reservationdate').datetimepicker({
+            format: 'L'
+        });
+        //Date range picker
+        $('#reservation').daterangepicker()
+        //Date range picker with time picker
+        $('#reservationtime').daterangepicker({
+          timePicker: true,
+          timePickerIncrement: 30,
+          locale: {
+            format: 'MM/DD/YYYY hh:mm A'
+          }
+        })
+        //Date range as a button
+        $('#daterange-btn').daterangepicker(
+          {
+            ranges   : {
+              'Today'       : [moment(), moment()],
+              'Yesterday'   : [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+              'Last 7 Days' : [moment().subtract(6, 'days'), moment()],
+              'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+              'This Month'  : [moment().startOf('month'), moment().endOf('month')],
+              'Last Month'  : [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            },
+            startDate: moment().subtract(29, 'days'),
+            endDate  : moment()
+          },
+          function (start, end) {
+            $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
+          }
+        )
+    
+        //Timepicker
+        $('#timepicker').datetimepicker({
+          format: 'LT'
+        })
+        
+        //Bootstrap Duallistbox
+        $('.duallistbox').bootstrapDualListbox()
+    
+        //Colorpicker
+        $('.my-colorpicker1').colorpicker()
+        //color picker with addon
+        $('.my-colorpicker2').colorpicker()
+    
+        $('.my-colorpicker2').on('colorpickerChange', function(event) {
+          $('.my-colorpicker2 .fa-square').css('color', event.color.toString());
+        });
+    
+        $("input[data-bootstrap-switch]").each(function(){
+          $(this).bootstrapSwitch('state', $(this).prop('checked'));
+        });
+    
+      })
+    </script>
+
+
+    
+</head>
+<body class=" hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed" onload="realtimeClock()">
+    <div class="wrapper">
+        {% include 'includes/header.html' %}
+       <!-- Navbar -->
+       {% include 'page_hero_for_selected_pages.html' %}
+       <!-- /.navbar --> 
+      
+      {% block body %}
+      
+
+        
+    
+      {% endblock %}
+
+      <!-- /.content-wrapper -->
+    
+      {% include 'includes/footer.html' %}
+
+    </div>
+
+    {% include 'all_js_imports.html' %}
+    <!--End Include Javascript Files-->
+
+
+    <script>
+      // Bar Chart for sales
+     $(function () {
+     'use strict'
+  
+     var ticksStyle = {
+       fontColor: '#495057',
+       fontStyle: 'bold'
+     }
+  
+     var mode      = 'index'
+     var intersect = true
+  
+     var $salesChart = $('#sales-report-chart')
+     var salesChart  = new Chart($salesChart, {
+       type   : 'bar',
+       data   : {
+        labels  : [{% for item_cat in total_sales %}'{{item_cat.category__category_name}}', {% endfor %}],
+         datasets: [
+           {
+             backgroundColor: '#28a745',
+             borderColor    : '#28a745',
+             data           :  [{% for item_cat in total_sales %}'{{item_cat.total_quantity}}', {% endfor %}]
+           }
+         ]
+       },
+       options: {
+         maintainAspectRatio: false,
+         tooltips           : {
+           mode     : mode,
+           intersect: intersect
+         },
+         hover              : {
+           mode     : mode,
+           intersect: intersect
+         },
+         legend             : {
+           display: false
+         },
+         scales             : {
+           yAxes: [{
+             // display: false,
+             gridLines: {
+               display      : true,
+               lineWidth    : '4px',
+               color        : 'rgba(0, 0, 0, .2)',
+               zeroLineColor: 'transparent'
+             },
+             ticks    : $.extend({
+               beginAtZero: true,
+             }, ticksStyle)
+           }],
+           xAxes: [{
+             display  : true,
+             gridLines: {
+               display: false
+             },
+             ticks    : ticksStyle
+           }]
+         }
+       }
+     })
+  
+     var $visitorsChart = $('#sales-line-chart')
+     var visitorsChart  = new Chart($visitorsChart, {
+       data   : {
+         labels  : ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'],
+         datasets: [{
+           type                : 'line',
+           data                : [{{monday_total_sales.amount}}, {{tuesday_total_sales.amount}}, {{wednesday_total_sales.amount}}, {{thursday_total_sales.amount}}, {{friday_total_sales.amount}}, {{saturday_total_sales.amount}}, {{sunday_total_sales.amount}}],
+           backgroundColor     : 'transparent',
+           borderColor         : '#28a745',
+           pointBorderColor    : '#28a745',
+           pointBackgroundColor: '#28a745',
+           fill                : false
+           // pointHoverBackgroundColor: '#007bff',
+           // pointHoverBorderColor    : '#007bff'
+         },
+           {
+             type                : 'bar',
+             data                : [{{lw_monday_total_sales.amount}}, {{lw_tuesday_total_sales.amount}}, {{lw_wednesday_total_sales.amount}}, {{lw_thursday_total_sales.amount}}, {{lw_friday_total_sales.amount}}, {{lw_saturday_total_sales.amount}}, {{lw_sunday_total_sales.amount}}],
+             backgroundColor     : 'tansparent',
+             borderColor         : '#6c757d',
+             pointBorderColor    : '#6c757d',
+             pointBackgroundColor: '#6c757d',
+             fill                : false
+             // pointHoverBackgroundColor: '#ced4da',
+             // pointHoverBorderColor    : '#ced4da'
+           }]
+       },
+       options: {
+         maintainAspectRatio: false,
+         tooltips           : {
+           mode     : mode,
+           intersect: intersect
+         },
+         hover              : {
+           mode     : mode,
+           intersect: intersect
+         },
+         legend             : {
+           display: false
+         },
+         scales             : {
+           yAxes: [{
+             // display: false,
+             gridLines: {
+               display      : true,
+               lineWidth    : '4px',
+               color        : 'rgba(0, 0, 0, .2)',
+               zeroLineColor: 'transparent'
+             },
+             ticks    : $.extend({
+               beginAtZero : true,
+               suggestedMax: 200,
+             }, ticksStyle)
+           }],
+           xAxes: [{
+             display  : true,
+             gridLines: {
+               display: false
+             },
+             ticks    : ticksStyle
+           }]
+         }
+       }
+     })
+   })
+  
+  
+   $(function () {
+     'use strict'
+  
+     var ticksStyle = {
+       fontColor: '#495057',
+       fontStyle: 'bold'
+     }
+  
+     var mode      = 'index'
+     var intersect = true
+  
+     var $salesChart = $('#sales_chart')
+     var salesChart  = new Chart($salesChart, {
+       type   : 'bar',
+       data   : {
+         labels  : [{% for item_cat in total_sales %}'{{item_cat.category__category_name}}', {% endfor %}],
+         datasets: [
+           {
+             backgroundColor: '#28a745',
+             borderColor    : '#28a745',
+             data           :  [{% for item_cat in total_sales %}'{{item_cat.sales_total}}', {% endfor %}]
+           }
+         ]
+       },
+       options: {
+         maintainAspectRatio: false,
+         tooltips           : {
+           mode     : mode,
+           intersect: intersect
+         },
+         hover              : {
+           mode     : mode,
+           intersect: intersect
+         },
+         legend             : {
+           display: false
+         },
+         scales             : {
+           yAxes: [{
+             // display: false,
+             gridLines: {
+               display      : true,
+               lineWidth    : '4px',
+               color        : 'rgba(0, 0, 0, .2)',
+               zeroLineColor: 'transparent'
+             },
+             ticks    : $.extend({
+               beginAtZero: true,
+               // Include a dollar sign in the ticks
+               callback: function (value, index, values) {
+                 // if (value >= 1000) {
+                 //   value /= 1000
+                 //   value += 'k'
+                 // }
+                 return 'MWK ' + value
+               }
+             }, ticksStyle)
+           }],
+           xAxes: [{
+             display  : true,
+             gridLines: {
+               display: false
+             },
+             ticks    : ticksStyle
+           }]
+         }
+       }
+     })
+    })
+  </script>
+
+    <script>
+      var input = document.querySelector("#phone_number");
+      window.intlTelInput(input, {
+        // any initialisation options go here
+      });
+    </script>
+
+    <script>
+      $(function () {
+        //Initialize Select2 Elements
+        $('.select2').select2()
+
+        //Initialize Select2 Elements
+        $('.select2bs4').select2({
+          theme: 'bootstrap4'
+        })
+
+        //Datemask dd/mm/yyyy
+        $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
+        //Datemask2 mm/dd/yyyy
+        $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
+        //Money Euro
+        $('[data-mask]').inputmask()
+
+        //Date range picker
+        $('#reservationdate').datetimepicker({
+            format: 'L'
+        });
+
+        
+        $('.from_date_time_picker').datetimepicker({
+          
+
+        });
+
+        //Date range picker
+        $('#reservation').daterangepicker()
+        //Date range picker with time picker
+        $('#example').daterangepicker({
+          timePicker: true,
+          timePickerIncrement: 30,
+          locale: {
+            format: 'MM/DD/YYYY hh:mm A'
+          }
+        })
+        //Date range as a button
+        $('#daterange-btn').daterangepicker(
+          {
+            ranges   : {
+              'Today'       : [moment(), moment()],
+              'Yesterday'   : [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+              'Last 7 Days' : [moment().subtract(6, 'days'), moment()],
+              'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+              'This Month'  : [moment().startOf('month'), moment().endOf('month')],
+              'Last Month'  : [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            },
+            startDate: moment().subtract(29, 'days'),
+            endDate  : moment()
+          },
+          function (start, end) {
+            $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
+          }
+        )
+
+        //Timepicker
+        $('#timepicker').datetimepicker({
+          format: 'LT'
+        })
+        
+        //Bootstrap Duallistbox
+        $('.duallistbox').bootstrapDualListbox()
+
+        //Colorpicker
+        $('.my-colorpicker1').colorpicker()
+        //color picker with addon
+        $('.my-colorpicker2').colorpicker()
+
+        $('.my-colorpicker2').on('colorpickerChange', function(event) {
+          $('.my-colorpicker2 .fa-square').css('color', event.color.toString());
+        });
+
+        $("input[data-bootstrap-switch]").each(function(){
+          $(this).bootstrapSwitch('state', $(this).prop('checked'));
+        });
+
+      })
+    </script>
+
+    <script>
+      $(function () {
+        $('#sales_report_table').DataTable({
+          "paging": true,
+          "lengthChange": false,
+          "searching": true,
+          "ordering": true,
+          "info": true,
+          "autoWidth": false,
+          "responsive": true,
+        });
+      });
+    </script>
+
+</body>
+</html>

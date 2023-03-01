@@ -54,12 +54,6 @@ class OrderItem(models.Model):
     def get_ordered_item_category(self):
         return self.item.category
     
-    def check_if_ordered_item_is_in_refund_order(self):
-        refund_order_item = RefundOrderItem.objects.get(order_id = self.order_id)  
-        if refund_order_item != None:
-            return True
-        else:
-            return False
 
 @receiver(post_save, sender=OrderItem)
 def update_orderitem_quantities(sender, instance, **kwargs):

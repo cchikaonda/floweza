@@ -29,8 +29,7 @@ def order_list(request):
     if request.user.is_admin == True:
         orders = Order.objects.all()
     else:
-        orders = Order.objects.filter(request.user == True)
-    # orders = Order.objects.filter(customer = request.user)
+        orders = Order.objects.filter(customer = request.user)
     
     zero_balance = Money(0.0, 'MWK')
     context = {

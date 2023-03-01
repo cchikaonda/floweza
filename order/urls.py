@@ -5,7 +5,6 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.csrf import csrf_exempt
 
 urlpatterns = [
-    # The home page
     path('order_list', order_list, name='order_list'),
     path('edit_order/<int:id>/', edit_order, name='edit_order'),
     path('add_payment/<int:id>/', add_payment, name='add_payment'),

@@ -15,7 +15,6 @@ from django.template.loader import render_to_string
 from constance import config
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib import messages
-from serializers.serializers import *
 from django.db.models import AutoField,IntegerField,FloatField,ExpressionWrapper, F, DecimalField, Count, Sum
 from djmoney.money import Money
 from django.db.models.functions import TruncDay
@@ -23,7 +22,6 @@ from django.utils import timezone
 from datetime import date, timedelta, datetime
 from django.db.models.functions import Lower
 from djmoney.models.fields import MoneyField
-from accounts.forms import *
 from inventory.forms import *
 
 

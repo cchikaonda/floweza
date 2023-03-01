@@ -12,7 +12,7 @@ from django.contrib.auth.models import Group, User
 class AddItemForm(forms.ModelForm):
     class Meta:
         model = Item
-        fields = ('item_name','image','price','discount_price', 'category', 'item_description', 'active')
+        fields = ('item_name','image','price','seller','discount_price', 'category', 'item_description', 'active')
         widgets = {
                 'item_description':forms.TextInput(attrs={'class': 'form-control',}),
                 }
